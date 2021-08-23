@@ -11,18 +11,50 @@ import admin from 'firebase-admin';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ListItem from './List-Item';
+import styled from "styled-components";
 
 
+const Button = styled.button`
+  min-width: 2px;
+  width: 80px;
+  height: auto;
+  letter-spacing: 0.5px;
+  line-height: 15px;
+  padding: 3px 3px 3px 3px;
+  font-size: 12px;
+  background-color: gray;
+  color: white;
+  text-transform: uppercase;
+  font-family: "Open Sans Condensed";
+  cursor: pointer;
+`;
 
-function MyChat() {
+const StyledListItem = styled.div`
+  padding: 10px;
+
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: white;
+  margin: 0 0 8px 0;
+  display: grid;
+  grid-gap: 20px;
+  flex-direction: column;
+`;
+
+
+function ChatRoom() {
+    const [collection, setCollection] = useState('messages')
     const usersRef = firestore.collection("users");
     const dummy = useRef();
-    const messagesRef = firestore.collection('messages');
+    const messagesRef = firestore.collection(collection);
     const query = messagesRef.orderBy('createdAt').limit(25);
     const [messages] = useCollectionData(query, { idField: 'id' });
     const [formValue, setFormValue] = useState('');
     const [usersList, setUsersList] = useState([])
+    const [openchat, setOpenchat] = useState(false);
   
+    
+    
     const sendMessage = async (e) => {
       e.preventDefault();
   
@@ -46,26 +78,41 @@ function MyChat() {
       })
     }
     
-    console.log(usersList);
+    function handleClick (item) {
+          console.log("open new chat");
+          switch (item) {
+            case 'jorgeasimas@gmail.com':
+              return setCollection('messages2');
+            case 'otheremail@gmail.com':
+              return setCollection('messages1');
+          }
+          setOpenchat(!openchat);
+    //      <button onClick={handleClick}>X</button>
+        }
     return (
     <div>
       <div className="listGrid">
        <div className="userList"> 
         <button onClick={listUsers}>fetch all users</button>
-        {usersList.map((item, key) => 
-           <ListItem item={item} key={key} />
-        )}
+        {usersList.map((item, key) =>   
+            <StyledListItem>
+            <span>{item}</span>
+            <Button onClick={() => handleClick(item)}>Start chat</Button>
+            </StyledListItem>   
+        )
+    }
             
       </div>
       <main>
         {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
         <span ref={dummy}></span>
       </main>
-      </div> 
       <form onSubmit={sendMessage}>
         <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="type your message" />
         <button type="submit" disabled={!formValue}>SEND</button>
       </form>
+      </div> 
+
     </div>)
   }
   
@@ -81,30 +128,4 @@ function MyChat() {
     </>)
   }
 
-/*
-  const listAllUsers = (nextPageToken) => {
-    // List batch of users, 50 at a time.
-    admin
-      .auth()
-      .listUsers(10, nextPageToken)
-      .then((listUsersResult) => {
-        listUsersResult.users.forEach((userRecord) => {
-          console.log('user', userRecord.toJSON());
-        });
-        if (listUsersResult.pageToken) {
-          // List next batch of users.
-          listAllUsers(listUsersResult.pageToken);
-        }
-      })
-      .catch((error) => {
-        console.log('Error listing users:', error);
-      });
-  };
-  // Start listing users from the beginning, 1000 at a time.
-  listAllUsers();
-*/
-
-
-
-
-  export default MyChat;
+  export default ChatRoom;
