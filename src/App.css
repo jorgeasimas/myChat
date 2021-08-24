@@ -46,7 +46,8 @@ body {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  background: #92e0a9;
+  background: #5a5e5f;
+  border: 1px solid black;
 }
 
 main {
@@ -56,6 +57,7 @@ main {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+
 }
 
 main::-webkit-scrollbar {

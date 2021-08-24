@@ -28,6 +28,7 @@ const config = {
     if (!userAuth) return;
   
     const userRef = firestore.doc(`users/${userAuth.uid}`);
+ //                   firestore.collection('users').doc('userDoc');
   
     const snapShot = await userRef.get();
   
