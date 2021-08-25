@@ -46,18 +46,15 @@ function ChatRoom() {
     const [collection, setCollection] = useState('messages')
     const usersRef = firestore.collection("users");
     const query1 = usersRef.orderBy('createdAt').limit(10);
-    const [users] = useCollectionData(query1);
+    const [usersList] = useCollectionData(query1);
 
     const dummy = useRef();
     const messagesRef = firestore.collection(collection);
     const query = messagesRef.orderBy('createdAt').limit(25);
     const [messages] = useCollectionData(query, { idField: 'id' });
     const [formValue, setFormValue] = useState('');
-    const [usersList, setUsersList] = useState([])
-    const [openchat, setOpenchat] = useState(false);
   
-    
-    
+   
     const sendMessage = async (e) => {
       e.preventDefault();
   
@@ -82,40 +79,33 @@ function ChatRoom() {
     const array9 = ["dinky013@hotmail.com", "gustavo.mazzoni@gmail.com"];
     
   
+    function checkArray(newArray, checkedAgainst) { 
+        return (newArray.length === checkedAgainst.length && newArray.every((element) => checkedAgainst.includes(element))) 
+        }
+
+
     function handleClick (item) {
-          console.log("open new chat");
           const newArray = [auth.currentUser.email];
           newArray.push(item);
           console.log(newArray);
-          checkArray1(newArray);
-          function checkArray1(newArray) { 
-            if (newArray.length === array4.length && newArray.every((element) => array4.includes(element))) 
-            {setCollection("messages");}
-            if (newArray.length === array5.length && newArray.every((element) => array5.includes(element))) 
-            {setCollection("messages2");}
-            if (newArray.length === array6.length && newArray.every((element) => array6.includes(element)))
-            {setCollection("messages3");}
-            if (newArray.length === array7.length && newArray.every((element) => array7.includes(element))) 
-            {setCollection("messages4");}
-            if (newArray.length === array8.length && newArray.every((element) => array8.includes(element))) 
-            {setCollection("messages5");}
-            if (newArray.length === array9.length && newArray.every((element) => array9.includes(element)))
-            {setCollection("messages6");}
-          }
-          setOpenchat(!openchat);
-    //      <button onClick={handleClick}>X</button>
+  
+          checkArray(newArray, array4) && setCollection(`${array4}`) 
+          checkArray(newArray, array5) && setCollection("messages2") 
+          checkArray(newArray, array6) && setCollection("messages3") 
+          checkArray(newArray, array7) && setCollection("messages4") 
+          checkArray(newArray, array8) && setCollection(`${array8}`) 
+          checkArray(newArray, array9) && setCollection("messages6") 
         }
+
     return (
     <div>
       <div className="listGrid">
        <div className="userList"> 
-        {users && users.map(us =>   
+        {usersList && usersList.map(us =>   
             <StyledListItem>
            <span>{us.email}</span>
             <Button onClick={() => handleClick(us.email)}>Start chat</Button>
-            </StyledListItem>   
-        )
-    }
+            </StyledListItem> )}
             
       </div>
       <main>
@@ -137,7 +127,7 @@ function ChatRoom() {
     const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
     return (<>
       <div className={`message ${messageClass}`}>
-        <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+        <img src={photoURL} />
         <p>{text}</p>
       </div>
     </>)

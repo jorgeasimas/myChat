@@ -5,22 +5,7 @@ import 'firebase/auth';
 import 'firebase/analytics';
 import { auth, signInWithGoogle } from '.././firebase/firebase.utils';
 import { connect } from 'react-redux';
-import {googleSignInStart, signOutStart} from '../redux/sagas';
-/* 
-export function SignIn() {
-    return (
-      <div>
-        <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
-      </div>
-    )
-}
-*/
-    export function SignOut() {
-        return auth.currentUser && (
-          <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
-        )
-      } 
-
+import {googleSignInStart} from '../redux/sagas';
       
     export function SignIn({googleSignInStart, currentUser}) {
 
@@ -36,7 +21,6 @@ export function SignIn() {
  
   const mapDispatchToProps = dispatch => ({
     googleSignInStart: () => dispatch(googleSignInStart())
-  //  signOutStart: () => dispatch(signOutStart())
   });
 
   const mapStateToProps = (state) => ({

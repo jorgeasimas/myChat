@@ -121,6 +121,7 @@ export function* onCheckUserSession() {
 }
 
 export function* onSignOutStart() {
+  console.log('signing out')
   yield takeLatest("SIGN_OUT_START", signOut);
 }
 
